@@ -1,0 +1,444 @@
+section.javacro-logo {
+  background-image: url("../images/JavaCro-18-logo_i770.png"), url("../images/Identalia-consulting-logo.png");
+  background-repeat: no-repeat;
+  background-position: right top, 83% top;
+  background-size: 3em, 3em;
+  min-height: 13em;
+  min-width: 13em;
+  position: absolute;
+}
+
+section.javacro {
+  background-image: url("../images/JavaCro-18-logo_i770.png");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 3em;
+  min-height: 13em;
+  min-width: 13em;
+  position: absolute;
+}
+
+.reveal .slides section h1, .reveal .slides section h2, .reveal .slides section h3 {
+	text-transform: none;
+  font-family: Open Sans Light;
+}
+
+.reveal .slides section.smaller-header h1 {
+  font-size: 1.5em;
+}
+
+.reveal ul {
+  display: block;
+}
+
+li {
+  list-style-type: none;
+}
+
+.reveal p {
+  font-family: Open Sans Light;
+}
+
+.reveal .slides section h1 {
+  color: #782B90;
+  font-weight: bold;
+  font-size: 1.8em;
+  margin-top: 0.5em;
+  padding-left: 5%;
+}
+
+.reveal .slides section h1 a {
+  color: #782B90;
+}
+
+.reveal .slides section h2 a {
+  color: #222;
+}
+
+.reveal .slides section h2 {
+  font-size: 1.3em;
+  padding-left: 5%;
+}
+
+.reveal .slides section h3 {
+  font-size: 1.2em;
+  padding-left: 5%;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.reveal .slides img {
+  border: none;
+  box-shadow: none;
+}
+
+.reveal .slides section[data-slide="naslov"] h1 {
+  font-size: 2.5em;
+  padding: 0;
+}
+
+.reveal .slides section[data-slide="naslov"] .logo {
+	max-height: 8em;
+	margin-top: 0.9em;
+}
+
+
+.reveal .slides section[data-slide="business-case" ] {
+  background-color: rgba(255,255,255,0.4);
+}
+
+
+.reveal .slides section[data-slide="arhitektura-komponente"] .slika {
+  display: block;
+  margin: 0 auto;
+  width: 75%;
+}
+
+.reveal .slides section[data-slide="arhitektura-protok"] .slika {
+  display: block;
+  margin: 0 auto;
+}
+
+.reveal .slides section[data-slide="3d-engine-v1"] h2, .reveal .slides section[data-slide="3d-engine-v1"] h3 {
+  font-size: 90%;
+}
+
+.reveal .slides section[data-slide="jmonkeyengine"] .jmonkeyengine-logo {
+  width: 15%;
+  position: absolute;
+  right: 0px;
+  top: 2%;
+}
+
+.reveal .slides section[data-slide="jmonkeyengine"] h2 {
+  font-size: 1.2em;
+}
+
+
+.reveal .slides section[data-slide="impl-jmonkeyengine-capture"] .jmonkeyengine-logo
+, .reveal .slides section[data-slide="jmonkeyengine-screenshot-1"] .jmonkeyengine-logo
+, .reveal .slides section[data-slide="jmonkeyengine-screenshot-2"] .jmonkeyengine-logo
+, .reveal .slides section[data-slide="jmonkeyengine-screenshot-3"] .jmonkeyengine-logo
+, .reveal .slides section[data-slide="jmonkeyengine-materials-1"] .jmonkeyengine-logo
+, .reveal .slides section[data-slide="jmonkeyengine-materials-2"] .jmonkeyengine-logo
+, .reveal .slides section[data-slide="impl-jmonkeyengine-video-recorder"] .jmonkeyengine-logo  {
+  width: 10%;
+  margin: 0px 0px;
+  height: 100%;
+  vertical-align: bottom;
+}
+
+.print-pdf .reveal .slides section[data-slide="jmonkeyengine-screenshot-1"] .screenshot
+, .print-pdf .reveal .slides section[data-slide="jmonkeyengine-screenshot-2"] .screenshot
+, .print-pdf .reveal .slides section[data-slide="jmonkeyengine-screenshot-3"] .screenshot {
+  width: 90%;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.reveal .slides section[data-slide="jmonkeyengine-materials-1"] h2 {
+  font-size: 0.6em;
+  line-height: 1.0em;
+}
+.reveal .slides section[data-slide="jmonkeyengine-materials-1"] code {
+  font-size: 1.0em;
+  line-height: 1.05em;
+}
+
+.reveal .slides section[data-slide="jmonkeyengine-materials-2"] h2 {
+  font-size: 0.6em;
+  margin-bottom: 1em;
+}
+.reveal .slides section[data-slide="jmonkeyengine-materials-2"] pre {
+  width: 70%;
+  float: left;
+  margin-left: 5%;
+}
+.reveal .slides section[data-slide="jmonkeyengine-materials-2"] #noise1 {
+  width: 45%;
+  position: absolute;
+  right: 0px;
+  margin-top: -2%;
+}
+.reveal .slides section[data-slide="jmonkeyengine-materials-2"] #noise2 {
+  width: 45%;
+  position: absolute;
+  right: 0px;
+  top: 65%;
+  margin-top: -2%;
+}
+.reveal .slides section[data-slide="jmonkeyengine-materials-2"] code {
+  font-size: 1.0em;
+  line-height: 1.05em;
+}
+
+
+.reveal .slides section[data-slide="impl-jmonkeyengine-capture"] h2 {
+  font-size: 0.6em;
+}
+
+.reveal .slides section[data-slide="impl-jmonkeyengine-video-recorder"] code {
+  font-size: 0.65em;
+  line-height: 1.1em;
+}
+.reveal .slides section[data-slide="impl-jmonkeyengine-video-recorder"] h2 {
+  font-size: 0.7em;
+}
+
+.reveal .slides section[data-slide="3d-model"] h2 {
+  font-size: 0.7em;
+  display: inline;
+}
+
+.reveal .slides section[data-slide="impl-engine-input"] code {
+  font-size: 0.55em;
+  line-height: 1.5em;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.reveal .slides section[data-slide="impl-engine-input"] h2 {
+  font-size: 0.7em;
+}
+
+
+.reveal .slides section[data-slide="impl-engine-instantiate"] code {
+  font-size: 0.6em;
+  line-height: 1.2em;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.reveal .slides section[data-slide="impl-engine-instantiate"] h2 {
+  font-size: 0.7em;
+}
+
+
+.reveal .slides section[data-slide="impl-engine-game-loop"] h2 {
+  font-size: 0.7em;
+}
+.reveal .slides section[data-slide="impl-engine-game-loop"] code {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+
+.reveal .slides section[data-slide="impl-engine-instant-operation"] code {
+  font-size: 0.8em;
+  line-height: 1.2em;
+}
+
+.reveal .slides section[data-slide="impl-engine-instant-operation"] h2 {
+  font-size: 0.7em;
+}
+
+.reveal .slides section[data-slide="impl-engine-instant-operation-2"] code {
+  font-size: 0.8em;
+  line-height: 1.2em;
+}
+
+.reveal .slides section[data-slide="impl-engine-instant-operation-2"] h2 {
+  font-size: 0.7em;
+}
+
+.reveal .slides section[data-slide="impl-engine-instant-operation-3"] #block1 {
+  font-size: 0.4em;
+  line-height: 1.15em;
+}
+
+.reveal .slides section[data-slide="impl-engine-instant-operation-3"] h2 {
+  font-size: 0.7em;
+}
+
+/*.reveal .slides section[data-slide="impl-konf"] h1 {
+  font-size: 1.5em;
+}*/
+.reveal .slides section[data-slide="impl-konf"] h2 {
+  font-size: 0.7em;
+}
+.reveal .slides section[data-slide="impl-konf"] code {
+  font-size: 0.7em;
+  line-height: 1.1em;
+}
+
+.reveal .slides section[data-slide="impl-konf"] #block1 {
+  width: 49%;
+  float: left;
+  margin-left: 5%;
+}
+
+.reveal .slides section[data-slide="impl-konf"] #block2 {
+  width: 45%;
+  float: right;
+}
+
+/*.reveal .slides section[data-slide="impl-konf-lights"] h1 {
+  font-size: 1.5em;
+}*/
+.reveal .slides section[data-slide="impl-konf-lights"] h2 {
+  font-size: 0.7em;
+}
+.reveal .slides section[data-slide="impl-konf-lights"] code {
+  font-size: 0.55em;
+  line-height: 1.4em;
+}
+
+.reveal .slides section[data-slide="primjer-lighshow-1"] {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+
+.reveal .slides section[data-slide="impl-konf-interop"] h2 {
+  font-size: 0.7em;
+}
+.reveal .slides section[data-slide="impl-konf-interop"] code {
+  font-size: 0.7em;
+  line-height: 1.2em;
+}
+
+
+.reveal .slides section[data-slide="primjer-lighshow-1"] h2 {
+  font-size: 0.7em;
+}
+.reveal .slides section[data-slide="primjer-lighshow-1"] code {
+  font-size: 0.7em;
+  line-height: 1.1em;
+  background-color: rgba(255, 255, 2550, 0.0);
+  border: none;
+  box-shadow: none;
+}
+
+.reveal .slides section[data-slide="performance-results"] .slika {
+  width: 85%;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 0.55em;
+  font-family: monospace;
+  line-height: 1.2em;
+  word-wrap: break-word;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); 
+}
+
+.reveal code {
+  font-family: monospace;
+}
+
+.reveal pre code {
+  display: block;
+  padding: 5px;
+  overflow: auto;
+  max-height: 500px;
+  word-wrap: normal; 
+}
+
+.nevidljiv{opacity: 0;width: 1px;height: 50px;border:none;}
+
+.print-pdf .slide-background.pdfBackground1 { background-size: 1% !important; }
+.print-pdf .slide-background.pdfBackground2 { background-size: 2% !important; }
+.print-pdf .slide-background.pdfBackground3 { background-size: 3% !important; }
+.print-pdf .slide-background.pdfBackground4 { background-size: 4% !important; }
+.print-pdf .slide-background.pdfBackground5 { background-size: 5% !important; }
+.print-pdf .slide-background.pdfBackground6 { background-size: 6% !important; }
+.print-pdf .slide-background.pdfBackground7 { background-size: 7% !important; }
+.print-pdf .slide-background.pdfBackground8 { background-size: 8% !important; }
+.print-pdf .slide-background.pdfBackground9 { background-size: 9% !important; }
+.print-pdf .slide-background.pdfBackground10 { background-size: 10% !important; }
+.print-pdf .slide-background.pdfBackground11 { background-size: 11% !important; }
+.print-pdf .slide-background.pdfBackground12 { background-size: 12% !important; }
+.print-pdf .slide-background.pdfBackground13 { background-size: 13% !important; }
+.print-pdf .slide-background.pdfBackground14 { background-size: 14% !important; }
+.print-pdf .slide-background.pdfBackground15 { background-size: 15% !important; }
+.print-pdf .slide-background.pdfBackground16 { background-size: 16% !important; }
+.print-pdf .slide-background.pdfBackground17 { background-size: 17% !important; }
+.print-pdf .slide-background.pdfBackground18 { background-size: 18% !important; }
+.print-pdf .slide-background.pdfBackground19 { background-size: 19% !important; }
+.print-pdf .slide-background.pdfBackground20 { background-size: 20% !important; }
+.print-pdf .slide-background.pdfBackground21 { background-size: 21% !important; }
+.print-pdf .slide-background.pdfBackground22 { background-size: 22% !important; }
+.print-pdf .slide-background.pdfBackground23 { background-size: 23% !important; }
+.print-pdf .slide-background.pdfBackground24 { background-size: 24% !important; }
+.print-pdf .slide-background.pdfBackground25 { background-size: 25% !important; }
+.print-pdf .slide-background.pdfBackground26 { background-size: 26% !important; }
+.print-pdf .slide-background.pdfBackground27 { background-size: 27% !important; }
+.print-pdf .slide-background.pdfBackground28 { background-size: 28% !important; }
+.print-pdf .slide-background.pdfBackground29 { background-size: 29% !important; }
+.print-pdf .slide-background.pdfBackground30 { background-size: 30% !important; }
+.print-pdf .slide-background.pdfBackground31 { background-size: 31% !important; }
+.print-pdf .slide-background.pdfBackground32 { background-size: 32% !important; }
+.print-pdf .slide-background.pdfBackground33 { background-size: 33% !important; }
+.print-pdf .slide-background.pdfBackground34 { background-size: 34% !important; }
+.print-pdf .slide-background.pdfBackground35 { background-size: 35% !important; }
+.print-pdf .slide-background.pdfBackground36 { background-size: 36% !important; }
+.print-pdf .slide-background.pdfBackground37 { background-size: 37% !important; }
+.print-pdf .slide-background.pdfBackground38 { background-size: 38% !important; }
+.print-pdf .slide-background.pdfBackground39 { background-size: 39% !important; }
+.print-pdf .slide-background.pdfBackground40 { background-size: 40% !important; }
+.print-pdf .slide-background.pdfBackground41 { background-size: 41% !important; }
+.print-pdf .slide-background.pdfBackground42 { background-size: 42% !important; }
+.print-pdf .slide-background.pdfBackground43 { background-size: 43% !important; }
+.print-pdf .slide-background.pdfBackground44 { background-size: 44% !important; }
+.print-pdf .slide-background.pdfBackground45 { background-size: 45% !important; }
+.print-pdf .slide-background.pdfBackground46 { background-size: 46% !important; }
+.print-pdf .slide-background.pdfBackground47 { background-size: 47% !important; }
+.print-pdf .slide-background.pdfBackground48 { background-size: 48% !important; }
+.print-pdf .slide-background.pdfBackground49 { background-size: 49% !important; }
+.print-pdf .slide-background.pdfBackground50 { background-size: 50% !important; }
+.print-pdf .slide-background.pdfBackground51 { background-size: 51% !important; }
+.print-pdf .slide-background.pdfBackground52 { background-size: 52% !important; }
+.print-pdf .slide-background.pdfBackground53 { background-size: 53% !important; }
+.print-pdf .slide-background.pdfBackground54 { background-size: 54% !important; }
+.print-pdf .slide-background.pdfBackground55 { background-size: 55% !important; }
+.print-pdf .slide-background.pdfBackground56 { background-size: 56% !important; }
+.print-pdf .slide-background.pdfBackground57 { background-size: 57% !important; }
+.print-pdf .slide-background.pdfBackground58 { background-size: 58% !important; }
+.print-pdf .slide-background.pdfBackground59 { background-size: 59% !important; }
+.print-pdf .slide-background.pdfBackground60 { background-size: 60% !important; }
+.print-pdf .slide-background.pdfBackground61 { background-size: 61% !important; }
+.print-pdf .slide-background.pdfBackground62 { background-size: 62% !important; }
+.print-pdf .slide-background.pdfBackground63 { background-size: 63% !important; }
+.print-pdf .slide-background.pdfBackground64 { background-size: 64% !important; }
+.print-pdf .slide-background.pdfBackground65 { background-size: 65% !important; }
+.print-pdf .slide-background.pdfBackground66 { background-size: 66% !important; }
+.print-pdf .slide-background.pdfBackground67 { background-size: 67% !important; }
+.print-pdf .slide-background.pdfBackground68 { background-size: 68% !important; }
+.print-pdf .slide-background.pdfBackground69 { background-size: 69% !important; }
+.print-pdf .slide-background.pdfBackground70 { background-size: 70% !important; }
+.print-pdf .slide-background.pdfBackground71 { background-size: 71% !important; }
+.print-pdf .slide-background.pdfBackground72 { background-size: 72% !important; }
+.print-pdf .slide-background.pdfBackground73 { background-size: 73% !important; }
+.print-pdf .slide-background.pdfBackground74 { background-size: 74% !important; }
+.print-pdf .slide-background.pdfBackground75 { background-size: 75% !important; }
+.print-pdf .slide-background.pdfBackground76 { background-size: 76% !important; }
+.print-pdf .slide-background.pdfBackground77 { background-size: 77% !important; }
+.print-pdf .slide-background.pdfBackground78 { background-size: 78% !important; }
+.print-pdf .slide-background.pdfBackground79 { background-size: 79% !important; }
+.print-pdf .slide-background.pdfBackground80 { background-size: 80% !important; }
+.print-pdf .slide-background.pdfBackground81 { background-size: 81% !important; }
+.print-pdf .slide-background.pdfBackground82 { background-size: 82% !important; }
+.print-pdf .slide-background.pdfBackground83 { background-size: 83% !important; }
+.print-pdf .slide-background.pdfBackground84 { background-size: 84% !important; }
+.print-pdf .slide-background.pdfBackground85 { background-size: 85% !important; }
+.print-pdf .slide-background.pdfBackground86 { background-size: 86% !important; }
+.print-pdf .slide-background.pdfBackground87 { background-size: 87% !important; }
+.print-pdf .slide-background.pdfBackground88 { background-size: 88% !important; }
+.print-pdf .slide-background.pdfBackground89 { background-size: 89% !important; }
+.print-pdf .slide-background.pdfBackground90 { background-size: 90% !important; }
+.print-pdf .slide-background.pdfBackground91 { background-size: 91% !important; }
+.print-pdf .slide-background.pdfBackground92 { background-size: 92% !important; }
+.print-pdf .slide-background.pdfBackground93 { background-size: 93% !important; }
+.print-pdf .slide-background.pdfBackground94 { background-size: 94% !important; }
+.print-pdf .slide-background.pdfBackground95 { background-size: 95% !important; }
+.print-pdf .slide-background.pdfBackground96 { background-size: 96% !important; }
+.print-pdf .slide-background.pdfBackground97 { background-size: 97% !important; }
+.print-pdf .slide-background.pdfBackground98 { background-size: 98% !important; }
+.print-pdf .slide-background.pdfBackground99 { background-size: 99% !important; }
+.print-pdf .slide-background.pdfBackground100 { background-size: 100% !important; }

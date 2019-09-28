@@ -1,0 +1,824 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>jMonkeyEngine</title>
+
+    <link rel="shortcut icon" href="favicon.png" />
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/white.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <link rel="stylesheet" href="lib/css/highlightjs-style.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+
+<!--
+* dodavanje pozadinske slike:
+
+-->
+
+<!-- Teme: -->
+
+<section data-markdown class="javacro" data-slide="naslov"
+         data-timing="35"><script type="text/template">
+# jMonkeyEngine: Doing 3D in Java
+<br/>
+Ivan Senji
+<br/>
+![Identalia Consulting](images/Identalia-consulting-logo.png)
+<!-- .element: class="logo"-->
+Note:
+* naslovni slide
+* predstavljanje (autor, firma, naslov)
+</script></section>
+
+<section data-markdown class="javacro-logo text-left" data-slide="intro"><script type="text/template">
+# jMonkeyEngine
+## Introduction
+## Business Case for 3D animations
+## About jMonkeyEngine
+## Implementation
+
+Note:
+* ovdje samo ukratko kažem o čemu ću pričati
+* o tome čime se firma bavi (zubarska klinika...)
+* o tome koji je naš business case
+* o tome zašto smo odabrali jMonkeyengine
+* zanimljivi detalji iz implementacije
+</script></section>
+
+<!-- 
+1) Zadatak: napraviti programski sustav koji će omogućiti on-demand vizualizaciju individualiziranih stomatoloških zahvata
+-->
+
+<section data-markdown class="javacro-logo text-left" data-slide="business-case" data-background-image="images/screenshot.png"><script type="text/template">
+# Business Case
+## What we had:<!-- .element: class="fragment" data-fragment-index="1"-->
+* ### CRM<!-- .element: class="fragment" data-fragment-index="1"-->
+* ### Dental procedures (text/pdf)<!-- .element: class="fragment" data-fragment-index="1"-->
+
+## What we wanted:<!-- .element: class="fragment" data-fragment-index="2"-->
+* ### On-demand personalized visualization of dental procedures<!-- .element: class="fragment" data-fragment-index="2"-->
+
+Note:
+* pričamo o business case-u
+* čime se bavimo (medicinski turizam, pregled, izrada ponude, tumačenje ponude)
+* što smo imali (CRM sustav za praćenje pacijenata, izradu ponuda,...)
+* što smo željeli (jednostavniji / dodatni način za tumačenje ponuda)
+</script></section>
+
+
+<!-- 
+2) Arhitektura sustava
+komponente sustava
+protok informacija
+nacrtati arhitekturu sustava
+-->
+
+<section data-markdown class="javacro-logo text-left" data-slide="arhitektura-komponente"><script type="text/template">
+# System architecture
+![System architecture](images/arhitektura-sustava-crtez.svg)<!-- .element: class="slika"-->
+Note:
+* pričamo o arhitekturi sustava
+* komponente: CRM, 3D animation generator...
+</script></section>
+
+<section data-markdown class="javacro-logo text-left" data-slide="arhitektura-protok"><script type="text/template">
+# System architecture (2)
+![System architecture](images/arhitektura-sustava-protok-crtez.svg)<!-- .element: class="slika"-->
+
+Note:
+* ovdje nabrojim koje su osnovne komponente sustava:
+* korisnici koriste CRM klijentsku aplikaciju
+* klijentska aplikacija koristim CRM APP server
+* nove komponente koje smo razvili / implementirali su
+* 3D queue processor i 3D generator
+* integracija s Vimeom
+</script></section>
+
+<!-- 
+3) 3D engine v1
+outsourced
+Delphi
+neskalabilanost
+sporost
+veliko zauzeće memorije
+workaround: smanjivanje preciznosti modela
+mjeranja brzine i skalabilnosti
+-->
+
+
+<section data-markdown class="javacro-logo text-left" data-slide="3d-engine-v1"><script type="text/template">
+# 3D engine v1
+## Pros:
+* ### Detailed 3D model
+
+## Cons:<!-- .element: class="fragment" data-fragment-index="1"-->
+* ### Outsourced<!-- .element: class="fragment"data-fragment-index="1"-->
+* ### Delphi (no source code)<!-- .element: class="fragment"data-fragment-index="1"-->
+* ### Not scalable<!-- .element: class="fragment"data-fragment-index="1"-->
+* ### Slow<!-- .element: class="fragment"data-fragment-index="1"-->
+
+Note:
+* pričam da smo imali prvu verziju sustava za vrijeme čije izgradnje je nastao dobar i detaljan model
+* i da je to jedina prednost v1
+* i nabrajam redom nedostatke
+* outsourced -> spor development i dugo potrebno vrijeme za nove feature
+* delphi -> no way to help with the development
+* !scalable -> one animation generated at a time
+</script></section>
+
+<section data-markdown class="javacro-logo text-left" data-slide="3d-engine-v1-2"><script type="text/template">
+# 3D engine v1
+## Cons (some implementation details):
+* ### Random crashing
+* ### No error handling/logging
+* ### 10 minute startup time
+* ### Framerate = f(CPU usage)
+* ### Requires monitor to be turned on
+
+Note:
+* pričam o svakodnevnici sa verzijom v1
+* rušenje za vrijeme pokretanja ili kasnije za vrijeme izvođenja
+* u slučaju random rušenja ili rušenja pri čitanju ulazne datoteke -> nema logova, stack tracea... ničega
+* spoooro pokretanje -> problem kod restarta servera ili rušenja
+* problem s CPU usage ovisnošću, ako CPU radi, preskočeni frameovi u generiranoj animaciji
+* što se desi u slučaju da je monitor ugašen -> crne animacije
+</script></section>
+
+<!-- 
+4) 3D engine v2
+odluka da se ide u in-house razvoj
+from scratch, reverse engineering verzije 1
+Java
+-->
+
+<section data-markdown class="javacro-logo text-left" data-slide="3d-engine-v2"><script type="text/template">
+# 3D engine v2
+## Business decisions:
+* ### In-house development from scratch
+* ### Reverse engineering of 3D engine v1
+* ### Use Java platform
+</script></section>
+
+<!-- 
+6) Izbor alata - jMonkey
+zašto jMonkey
+razvojno okruženje
+osnovne karakteristike alata
+-->
+
+<section data-markdown class="javacro-logo text-left" data-slide="tools"><script type="text/template">
+# Tools and frameworks
+## <a href="http://jmonkeyengine.org/">jMonkeyEngine</a>
+## <a href="https://projects.spring.io/spring-boot/">Spring Boot</a>
+## RESTful Web Service
+## <a href="http://advantageous.github.io/konf/">Konf - Typed Java Config system</a>
+## Java 8 Features
+</script></section>
+
+<!-- 
+5) Import i migracija modela
+opisati što smo radili
+staviti neke efektne slike
+nabrojati što se sve trebalo izmodelirati
+malo statistike: broj čvorova po modelu itd.
+-->
+
+
+<!-- 
+7) Detalji implementacije (razvući na slajdova koliko treba)
+arhitektura rješenja
+parsiranje ulaznog meta-jezika
+korištenje Java 8 featurea
+sve što ti se učini da ima smisla tu reći..
+-->
+
+<section data-markdown class="javacro-logo text-left" data-slide="jmonkeyengine"><script type="text/template">
+# jMonkeyEngine
+![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"-->
+## Free, open source game engine
+## For Java game developers
+## Full SDK with IDE based on Netbeans
+## Support for assets (models, materials)
+## Can be used in any IDE as library
+</script></section>
+
+<!-- par screenshotova iz jMonekyEnginea -->
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="jmonkeyengine-screenshot-1"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"-->Java IDE
+![jMonkeyEngine logo](images/jmonkeyengine-1.png)<!-- .element: class="screenshot"-->
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="jmonkeyengine-screenshot-2"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"-->Model viewer
+![jMonkeyEngine logo](images/jmonkeyengine-2.png)<!-- .element: class="screenshot"-->
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="jmonkeyengine-screenshot-3"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"-->Material editor
+![jMonkeyEngine logo](images/jmonkeyengine-4.png)<!-- .element: class="screenshot"-->
+
+
+</script></section>
+
+<section id="slide-model" data-markdown class="javacro-logo text-left smaller-header" data-slide="3d-model" data-background-image="images/render-wireframe-36-38-transparent.jpeg"><script type="text/template">
+# 3D Model
+## 1046 obj and mtl files
+## 5079226 vertices
+## 5372456 polygons
+
+## Manually import models into jMonkeyEngine
+
+```txt
+...
+v  -3.2342 -12.8390 -24.7570
+v  -2.9185 -12.8832 -24.7849
+v  -2.9155 -12.8057 -24.7975
+v  -3.2246 -12.7613 -24.7621
+...
+vn 0.1793 0.1941 0.9645
+vn 0.1639 0.2279 0.9598
+vn 0.1704 0.0407 0.9845
+vn 0.1443 -0.0965 0.9848
+...
+f 1//1 2//2 3//3 4//4 
+f 5//5 6//6 2//2 1//1 
+f 1//1 7//7 8//8 5//5 
+```
+
+Note:
+
+for f in $(find . -name "*.obj" | grep -v "stari"); do grep "v " $f; done | wc -l
+
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="jmonkeyengine-materials-1" data-background-image="images/noise-0.5.png"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"--><a href="https://jmonkeyengine.github.io/wiki/jme3/advanced/j3m_material_files.html">Materials</a>
+## Materials can be based on one of many predefined material types
+## Support for creating custom material templates (j3md)
+## Material templates can use complex vertex and fragment shaders
+```
+// noise.j3md:
+MaterialDef noise {
+    MaterialParameters {
+        Color Color
+        Float NoiseIntensity
+    }
+    Technique {
+        VertexShader GLSL130: Shaders/Noise130.vert
+        FragmentShader GLSL130: Shaders/Noise130.frag
+        WorldParameters {
+            WorldViewProjectionMatrix
+            Time
+            Resolution
+        }
+    }
+}
+```
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="jmonkeyengine-materials-2" data-background-image="images/noise-0.1.png"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"-->Materials
+## Instantiate materials from template files
+![Noise0.5](images/noise-0.5.png)<!--.element id="noise1" -->
+<pre><code class="java" data-noescape data-trim>
+// noiseSmall.j3m:
+Material Noise Small : Materials/noise.j3md {
+     MaterialParameters {
+        Color : 1 1 1 1
+        NoiseIntensity : <mark>0.5</mark>
+     }
+}
+</code></pre>
+
+![Noise0.1](images/noise-1.0.png)<!--.element id="noise2" -->
+<pre><code class="java" data-noescape data-trim>
+// noiseLarge.j3m:
+Material Noise Large : Materials/noise.j3md {
+     MaterialParameters {
+        Color : 1 1 1 1
+        NoiseIntensity : <mark>1.0</mark>
+     }
+}
+</code></pre>
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-jmonkeyengine-capture"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"--><a href="http://aurellem.org/cortex/html/capture-video.html">Capture video</a>
+
+## Default Timer implementation is useful for games
+## Video recording requires steady framerate with no frames skipped
+<pre><code class="java" data-noescape data-trim>
+setTimer(new <b>IsoTimer</b>(30));
+</code></pre>
+
+## Video is recorded by attaching a video recorder to state manager
+<pre><code class="java" data-noescape data-trim>
+app.<b>enqueue</b>(() -> {
+  ViewPort viewPort1 = app
+    .getRenderManager()
+    .createPostView("a3d record", app.getCamera());
+  viewPort1.setClearFlags(false, false, false);
+  app.<b>getStateManager</b>().attach(<b>videoRecorder</b>);
+  viewPort1.addProcessor(<b>videoRecorder</b>);
+  return null;
+});
+</code></pre>
+
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-jmonkeyengine-video-recorder"><script type="text/template">
+# ![jMonkeyEngine logo](images/monkeyx2.png)<!-- .element: class="jmonkeyengine-logo"--><a href="http://aurellem.org/cortex/html/capture-video.html">Video Recorder</a>
+## External process
+```java
+process = new ProcessBuilder(
+    "ffmpeg", "-y", "-f", "rawvideo", "-pix_fmt", "abgr",
+    "-video_size", width + "x" + height, "-framerate", "30",
+    "-i", "pipe:0", "-an", "-c:v", ...// other params
+    output.getPath()
+  )
+  .redirectErrorStream(false)
+  .redirectOutput(ProcessBuilder.Redirect.PIPE)
+  .redirectInput(ProcessBuilder.Redirect.PIPE).start();
+
+outputStream = new BufferedOutputStream(process.getOutputStream(), 1000);
+```
+## Pipe raw frames into external process
+```java
+@Override
+public void record(BufferedImage rawFrame) {
+  // ...
+  try {
+    byte[] data = convertImageData(rawFrame);
+    outputStream.write(data);
+    outputStream.flush();
+  } catch (IOException ex) {
+    throw new RuntimeException("Error in initVideo when writing frame", ex);
+  }
+}
+```
+</script></section>
+
+<!-- par screenshotova iz jMonekyEnginea -->
+
+<!-- TODO Još slideova o ovome -->
+
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" 
+         data-slide="impl-engine-uml"
+         data-background-image="images/a3d-uml.svg"
+         data-background-size="100%"><script type="text/template">
+# Engine (UML)
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-engine-game-loop"><script type="text/template">
+# Engine (Game loop)
+## Game loop is used to update the model before rendering each frame
+<pre><code class="java" data-noescape data-trim>
+@Override
+public void simpleUpdate(float tpf) {
+  if (!animationStepPaused) {
+    try {
+      <mark>animation.step();</mark>
+      if (animation.isDone()) {
+        done = true;
+        log.info("Total duration is {}", 
+              System.currentTimeMillis() - startTime);
+        stop();
+      }
+    } catch (Exception e) {
+      log.error("Error in simpleUpdate", e);
+      this.stop();
+    } finally {
+      ctx.incGlobalFrameCounter();
+    }
+  }
+}
+</code></pre>
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" 
+         data-slide="impl-engine-input"><script type="text/template">
+# Dental procedures description
+## 3D engine input: dental procedures in JSON format
+```json
+{
+  "operations": [
+    {"name": "video", "params": {"videoFileName": "/idtA.mp4", "frames": 341, "movieStartTransparencyDuration": 0 } },
+    {"name": "nedostajuci", "location": "16,14,24,26", "label": "Missing teeth: ", "title": ""},
+    {"name": "pokvaren", "location": "21,22,23", "label": "Teeth with cavities: ", "title": ""},
+    {"name": "otvoriCeljust", "location": "", "label": "", "title": ""},
+    {"name": "posjet", "location": "1", "label": "Treatments in the 1. visit: ", "title": "During the 1. visit in duration of 5-7 days the following treatments are preformed"},
+    {"name": "trans", "location": "7,7", "label": "transparencija", "title": ""},
+    {"name": "rotirajNaSredinu", "location": "0", "label": "rotirajNaSredinu", "title": ""},
+    {"name": "sinusLiftVeliki", "location": "2", "label": "Sinus lift in the quadrant: ", "title": "Sinus lift in the quadrant:"},
+    {"name": "rotirajNaSredinu", "location": "0", "label": "rotirajNaSredinu", "title": ""},
+    {"name": "napuniKanale", "location": "21,22,23", "label": "Root canal filling: ", "title": "Root canal filling:"},
+    {"name": "rotirajNaSredinu", "location": "0", "label": "rotirajNaSredinu", "title": ""},
+    {"name": "implantiraj", "location": "16,14,24,26", "label": "Implants on: ", "title": "Implants on:"},
+    {"name": "trans", "location": "10,10", "label": "transparencija", "title": ""},
+    {"name": "rotirajNaSredinu", "location": "0", "label": "rotirajNaSredinu", "title": ""},
+    {"name": "izbrusiZub", "location": "13,12,11,21,22,23", "label": "Filed down teeth: ", "title": "Filed down teeth:"},
+    ...
+```
+## Parse JSON using <a href="https://github.com/google/gson">Google Gson</a>
+```java
+  Gson gson = (new GsonBuilder()).create();
+  animationDefinition = gson.fromJson(new InputStreamReader(videoOptions.getInputFile()),
+                                      AnimationDefinition.class);
+```
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header"
+         data-slide="impl-engine-instantiate"><script type="text/template">
+# Prepare animation operations
+## AnimationDefinition → AnimationOperation
+<pre><code class="java" data-noescape data-trim>
+List<AnimationOperation> operations = 
+  animationDefinition.getOperations().stream()
+                     .map(op -> model.<b>instantiateAnimationOperation</b>(op))
+                     .filter(Objects::nonNull)
+                     .collect(Collectors.toList());
+</code></pre>
+
+## AnimationOperation factory method:
+<pre><code class="java" data-noescape data-trim>
+public AnimationOperation <b>instantiateAnimationOperation</b>(AnimationOperationDefinition o) {
+  try {
+    switch (o.getName()) {
+    case "<b>par</b>":
+      return parallel("par", o.getOps().stream()
+                              .map(o2 -> <b>instantiateAnimationOperation</b>(o2))
+                              .collect(Collectors.toList()));
+    case "<b>seq</b>":
+      return sequence("seq", o.getOps().stream()
+                              .map(o2 -> <b>instantiateAnimationOperation</b>(o2))
+                              .collect(Collectors.toList()));
+    case "<b>nop</b>":
+      return nop("nop", new BigDecimal(o.getParam1()).longValue());
+    case "<b>otvoriCeljust</b>":
+      return otvoriCeljust();
+    case "<b>implantiraj</b>":
+      return sequence(
+          logTime("implantiraj"),
+          implantirajN(o.getLabel(), o.locationAsIntegerArray()));
+    ...
+</code></pre>
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-engine-instant-operation"><script type="text/template">
+# Operation example 1
+## Extensive use of Java streams
+<pre><code class="java" data-noescape data-trim>
+public class InitialStateMissingTooth
+            extends InstantOperation {
+
+  private final AnimationContext ctx;
+  private final int[] teeth;
+
+  public InitialStateMissingTooth(AnimationContext ctx, int... teeth) {
+    ...
+  }
+
+  @Override
+  public void operation() {
+    Arrays.stream(teeth)
+          .<b>forEach</b>(tooth -> <b>showSpatial</b>(
+                              ctx.getModel()
+                                 .getModelForTooth(TOOTH, tooth)
+                              , <b>false</b>));
+  }
+}
+</code></pre>
+</script></section>
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-engine-instant-operation-2"><script type="text/template">
+# Operation example 2
+## Lazy execution using Suppliers
+<pre><code class="java" data-noescape data-trim>
+public class TranslateToOperation extends InstantModelOperation {
+
+  private final Vector3f end;
+
+  public TranslateToOperation(String name,
+                              <b>Supplier&lt;Collection&lt;Spatial>> models</b>,
+                              Vector3f end) {
+    ...
+  }
+
+  @Override
+  public void operation() {
+    try {
+      <b>models.get()</b>.forEach(m -> m.setLocalTranslation(end));
+    } catch (Exception e) {
+      throw new RuntimeException(
+                  "Exception in TranslateToOperation with name: "
+                  + getName() + ", models: " + models, e);
+    }
+  }
+}
+</code></pre>
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-engine-instant-operation-3"><script type="text/template">
+# Operation example 3
+## Compose complex animations using simple animation operations
+<pre id="block1"><code class="java" data-noescape data-trim>
+// tooth extraction animation:
+
+AnimationOperationSequence extractTooth = 
+  <b>sequence</b>(
+    <b>parallel</b>(
+      model.<b>move</b>(wrap(modelTooth), tooth, totalDuration, start, end),
+      <b>sequence</b>(
+        <b>nop</b>(totalDuration - transparencyDuration),
+        <b>transparencyOne</b>(modelTooth, transparencyDuration, 1.0f, 0.0f, null, true))),
+    <b>show</b>(wrap(modelTooth), false));
+
+AnimationOperationSequence extractRoot = 
+  <b>sequence</b>(
+    <b>parallel</b>(
+      model.<b>move</b>(wrap(modelRoot), tooth, totalDuration, start, end),
+      <b>sequence</b>(
+        <b>nop</b>(totalDuration - transparencyDuration),
+        <b>transparencyOne</b>(modelRoot, transparencyDuration, 1.0f, 0.0f, null, true))),
+    <b>show</b>(wrap(modelRoot), false));
+
+addOp(
+  <b>cond</b>(
+    () -> !isHidden(modelRoot),
+    extractRoot,
+    extractTooth));
+</code></pre>
+</script></section>
+
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-konf"><script type="text/template">
+# <a href="http://advantageous.github.io/konf/">Konf</a> - Typed Java Config system
+## Java configuration library
+## JavaScript / YAML / JSON config
+<pre id="block1"><code class="js" data-noescape data-trim>
+var config = {
+    
+  Positions: positions,
+  Timing: timing,
+  Zoom: zoomConfig,
+  Scene: scene,
+
+  GuiOptions: {
+    displayStatView: false,
+    displayDebugAxis: false,
+    debugLightPosition: false,
+    font: "OpenSans-Regular.ttf"
+  },
+
+  params: {
+    gcOffset: [0, 6.0, -25.0],
+    dcOffset: [0, -6.5, -26.0]
+  },
+
+  Commands: commands
+};
+</code></pre>
+<pre id="block2"><code class="js" data-noescape>
+
+
+
+
+
+
+
+c.getBoolean("GuiOptions.displayStatView")
+
+
+c.getString("GuiOptions.font")
+
+
+
+c.getFloatList("params.gcOffset");
+
+
+
+c.getConfig("Commands"); // get sub config
+
+</code></pre>
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-konf-lights"><script type="text/template">
+# <a href="http://advantageous.github.io/konf/">Konf</a> - Complex objects
+## Define complex configuration objects
+<pre id="block1"><code class="js" data-noescape data-trim>
+var scene = {
+  <b>PointLights</b>: [
+    {
+      name: "l1",
+      pos: [60, -20, 0], color: [1.0, 1.0, 1.0, 1.0], radius: 200, shadow: true
+    }, ...
+  ]
+};
+</code></pre>
+
+## Read complex configuration objects
+<pre id="block2"><code class="java" data-noescape data-trim>
+public PointLightDef <b>pointLightDefFromConfig</b>(Config c) {
+  PointLightDef pl = new PointLightDef();
+  pl.name = c.getString("name");
+  pl.pos = getVector3fFromFloatList(c.getFloatList("pos"));
+  pl.color = getColorFromFloatList(c.getFloatList("color"));
+  pl.radius = c.getFloat("radius");
+  pl.shadow = c.getBoolean("shadow");
+  return pl;
+}
+
+List<Config> lights = ctx.getConfig().getConfigList("Scene.<b>PointLights</b>");
+lights.stream().map(c -> <b>pointLightDefFromConfig</b>(c))
+               .forEach(pld -> addPointLight(pld);
+</code></pre>
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" data-slide="impl-konf-interop"><script type="text/template">
+# <a href="http://advantageous.github.io/konf/">Konf</a> - Java ⇿ Javascript
+## Use javax.script to add java objects to script engine context
+<pre id="block1"><code class="java" data-noescape data-trim>
+public Config load(final String... resources) {
+  final ScriptEngine engine = <b>new ScriptEngineManager().getEngineByName("nashorn");</b>
+  try (final InputStream resourceAsStream = findResource("jjs-config-utils.js")) {
+    Bindings b = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
+    <b>b.put("javaModel", model);</b>
+    engine.eval(new InputStreamReader(resourceAsStream));
+    loadResources(engine, resources, b);
+  } catch ...
+  return ConfigLoader.loadFromObject(engine.get("config"));
+}
+</code></pre>
+
+## Use java objects in Javascript configuration
+<pre id="block2"><code class="js" data-noescape data-trim>
+TestInterOp: {
+  fun: function(x) {
+    print("Executing TestInterOp fun " + <b>javaModel</b>.teeth);
+    return {
+      name: "showText",
+      label: "test: " + <b>javaModel</b>.teeth[x]
+    };
+  }
+}
+</code></pre>
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header"
+         data-slide="primjer-lighshow-1"
+          ><script type="text/template">
+# Konf - Javascript configuration
+## Compose animation operations in Javascript configuration
+<pre id="block1"><code class="js" data-noescape data-trim>
+var commands = {
+  <b>LightTest</b>: {
+    fun: function(x) {
+      <b>var ops = [];</b>
+      for (i=1; i<5; i++) {
+        ops.push({"name": "move",
+                  "params": {
+                    "model": {"path": "l1"},
+                    "to": [-10, 0, 00],
+                    "duration": 90 
+                  }
+        });
+        ops.push({"name": "move", "params": {"model": {"path": "l2"},
+                  "to": [10, 0, 0], "duration": 90 } });
+        ops.push({"name": "move", "params": {"model": {"path": "l1"},
+                  "to": scene.PointLights[0].pos, "duration": 90 } });
+        ops.push({"name": "move", "params": {"model": {"path": "l2"},
+                  "to": scene.PointLights[1].pos, "duration": 90 } });
+      }
+      return {
+        name: <b>"seq"</b>,
+        ops: <b>ops</b>
+      };
+    }
+  }
+}
+</code></pre>
+</script></section>
+
+
+
+<!--
+8) 3D engine v2 - rezultat
+mjerenje performansi i skalabilnosti
+potrošnja memorije
+bolje iskorištavanje hardvera
+bolja integriranost s ostatkom sustava
+...
+-->
+
+<section data-markdown class="javacro-logo text-left smaller-header" 
+         data-slide="performance-results"><script type="text/template">
+# 3D engine v2 - performance
+
+![Identalia Consulting](images/chart-usporedba.png)<!--.element class="slika"-->
+
+Note:
+* pričam o performansama
+</script></section>
+
+
+<section data-markdown class="javacro-logo text-left smaller-header" 
+         data-slide="performance-results"><script type="text/template">
+# 3D engine v2 - results
+
+## Better performance
+## Scalability (parallel execution)
+## Faster development
+## Easier debugging
+## Monitoring
+
+Note:
+* pričam o performansama
+</script></section>
+
+
+<!-- 
+9) Demo
+izraditi ponudu kroz aplikaciju (pripremljeni shortcuti)
+ne prikazivati VDS i MDS zbog filmića 
+pokazati ponudu u PDF obliku
+poslati ponudu na generiranje, prikazati generiranje ako ide
+pokazati rezultat - filmić
+-->
+<section data-markdown class="javacro-logo" 
+         data-slide="performance-results"
+         data-background-video="images/9fc0ffd4-56c9-4e43-a37c-c53d462d1ed4.mp4"
+         data-background-video-loop="true"><script type="text/template">
+<br/>
+<br/>
+# [Demo](http://www.identalia.com/en/3d/?id-animacija=305651&jezik=en&ts=440a75345d61446f390c847f34a133e2&ver=3)
+
+Note:
+
+</script></section>
+
+
+<section data-markdown class="javacro-logo" 
+         data-slide="performance-results"><script type="text/template">
+<br/>
+<br/>
+# Questions?
+</script></section>
+
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        center: false,
+        fragments: true,
+        transition: "none",
+        history: true,
+        defaultTiming: 60,
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
